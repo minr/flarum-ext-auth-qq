@@ -1,9 +1,9 @@
 minr-auth-qq:
   forum:
     log_in:
-      with_qq_button: "Log In with QQ"
+      with_qq_button: Log In with QQ
   admin:
     qq_settings:
-      title: "QQ Settings"
-      client_id_label: "App ID"
-      client_secret_label: "App Secret"
+      title: QQ Settings
+      client_id_label: App ID
+      client_secret_label: App Secret
