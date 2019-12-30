@@ -1,0 +1,12 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea/.gitignore
+.idea/composerJson.xml
+.idea/flarum-ext-auth-qq.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/php.xml
+composer.lock
+vendor/
+.idea/watcherTasks.xml
+js/node_modules/

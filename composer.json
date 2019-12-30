@@ -1,0 +1,40 @@
+{
+    "name": "minr/flarum-ext-auth-qq",
+    "description": "Allow users to log in with QQ.",
+    "type": "flarum-extension",
+    "keywords": ["authentication"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "JYmusic",
+            "email": "zhangcb1984@163.com"
+        },
+        {
+            "name": "MIN",
+            "email": "294953530@qq.com"
+        }
+    ],
+    "require": {
+        "flarum/core": "^0.1.0-beta.9",
+        "league/oauth2-client": "^2.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Minr\\Auth\\QQ\\": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1.x-dev"
+        },
+        "flarum-extension": {
+            "title": "QQ Login",
+            "icon": {
+                "name": "fab fa-qq",
+                "backgroundColor": "#18ACFC",
+                "color": "#fff"
+            }
+        }
+    },
+    "minimum-stability": "dev"
+}

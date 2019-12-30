@@ -1,0 +1,9 @@
+minr-auth-qq:
+  forum:
+    log_in:
+      with_qq_button: "使用QQ登录"
+  admin:
+    qq_settings:
+      title: "QQ登录设置"
+      client_id_label: "App ID"
+      client_secret_label: "App Secret"
