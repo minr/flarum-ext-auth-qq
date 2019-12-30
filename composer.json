@@ -4,7 +4,7 @@
     "type": "flarum-extension",
     "keywords": ["authentication"],
     "license": "MIT",
-    "version": "v0.1.1",
+    "version": "v0.1.2",
     "authors": [
         {
             "name": "JYmusic",
@@ -12,7 +12,8 @@
         },
         {
             "name": "MIN",
-            "email": "294953530@qq.com"
+            "email": "294953530@qq.com",
+            "role": "master"
         }
     ],
     "require": {
