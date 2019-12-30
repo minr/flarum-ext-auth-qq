@@ -4,6 +4,7 @@
     "type": "flarum-extension",
     "keywords": ["authentication"],
     "license": "MIT",
+    "version": "v0.1.0",
     "authors": [
         {
             "name": "JYmusic",
