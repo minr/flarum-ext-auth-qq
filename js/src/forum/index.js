@@ -3,7 +3,7 @@ import app from 'flarum/app';
 import LogInButtons from 'flarum/components/LogInButtons';
 import LogInButton from 'flarum/components/LogInButton';
 
-app.initializers.add('mionr-auth-qq', () => {
+app.initializers.add('minr-auth-qq', () => {
     extend(LogInButtons.prototype, 'items', function(items) {
         items.add('google',
         <LogInButton
