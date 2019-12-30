@@ -8,7 +8,7 @@ minr-auth-qq:
   admin:
 
     # These translations are used in the Google Settings modal dialog.
-    google_settings:
+    qq_settings:
       client_id_label: App ID
       client_secret_label: App Secret
       title: QQ 设置
@@ -18,4 +18,4 @@ minr-auth-qq:
 
     # These translations are used in the Log In modal dialog.
     log_in:
-      with_google_button: 通过QQ登录
+      with_qq_button: 通过QQ登录
