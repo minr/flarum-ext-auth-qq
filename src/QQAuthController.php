@@ -21,7 +21,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\RedirectResponse;
 
-class QQAuthController implements RequestHandlerInterface {
+class QQAuthController implements RequestHandlerInterface{
     /**
      * @var ResponseFactory
      */
@@ -45,21 +45,19 @@ class QQAuthController implements RequestHandlerInterface {
     public function __construct(ResponseFactory $response, SettingsRepositoryInterface $settings, UrlGenerator $url) {
         $this->response = $response;
         $this->settings = $settings;
-        $this->url = $url;
+        $this->url      = $url;
     }
 
     /**
      * @param Request $request
      * @return ResponseInterface
-     * @throws \League\OAuth2\Client\Provider\Exception\FacebookProviderException
-     * @throws Exception
      */
     public function handle(Request $request): ResponseInterface {
         $redirectUri = $this->url->to('forum')->route('auth.qq');
 
         $provider = new QQ([
-            'clientId'          => $this->settings->get('flarum-auth-qq.app_id'),
-            'clientSecret'      => $this->settings->get('flarum-auth-qq.app_secret'),
+            'clientId'          => $this->settings->get('minr-auth-qq.client_id'),
+            'clientSecret'      => $this->settings->get('minr-auth-qq.client_secret'),
             'redirectUri'       => $redirectUri,
             'graphApiVersion'   => 'v3.0',
         ]);

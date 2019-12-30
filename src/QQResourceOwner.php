@@ -26,7 +26,7 @@ class QQResourceOwner implements ResourceOwnerInterface {
      *
      * @return string|null
      */
-    public function getId() {
+    public function getId(){
         return;
     }
 
@@ -35,7 +35,7 @@ class QQResourceOwner implements ResourceOwnerInterface {
      *
      * @return array
      */
-    public function toArray() {
+    public function toArray(){
         return $this->response;
     }
 }

@@ -4,7 +4,7 @@
     "type": "flarum-extension",
     "keywords": ["authentication"],
     "license": "MIT",
-    "version": "v0.1.5",
+    "version": "v0.1.6",
     "authors": [
         {
             "name": "JYmusic",
@@ -18,7 +18,8 @@
     ],
     "require": {
         "flarum/core": "^0.1.0-beta.9",
-        "league/oauth2-client": "^2.2"
+        "league/oauth2-client": "^2.2",
+      "ext-json": "*"
     },
     "autoload": {
         "psr-4": {

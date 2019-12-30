@@ -40,12 +40,14 @@ class QQ extends AbstractProvider {
 		return $this->domain . '/oauth2.0/token';
 	}
 
-	/**
-	 * Get provider url to fetch user details
-	 * @param AccessToken $token
-	 * @return string
-	 */
-	public function getResourceOwnerDetailsUrl (AccessToken $token) {
+    /**
+     * Get provider url to fetch user details
+     *
+     * @param AccessToken $token
+     * @return string
+     * @throws IdentityProviderException
+     */
+	public function getResourceOwnerDetailsUrl(AccessToken $token) {
 		$OpenidJson   = $this->fetchOpenid($token);
 		$openId       = json_decode($OpenidJson, TRUE);
 		$this->openid = $openId['openid'];
@@ -58,17 +60,18 @@ class QQ extends AbstractProvider {
 	 * @param AccessToken $token
 	 * @return string
 	 */
-	protected function getOpenidUrl (AccessToken $token)
-	{
+	protected function getOpenidUrl(AccessToken $token) {
 		return $this->domain . '/oauth2.0/me?access_token=' . $token;
 	}
 
-	/**
-	 * Get openid
-	 * @param AccessToken $token
-	 * @return mixed
-	 */
-	protected function fetchOpenid (AccessToken $token) {
+    /**
+     * Get openid
+     *
+     * @param AccessToken $token
+     * @return mixed
+     * @throws IdentityProviderException
+     */
+	protected function fetchOpenid(AccessToken $token) {
 		$url     = $this->getOpenidUrl($token);
 		$request = $this->getAuthenticatedRequest(self::METHOD_GET, $url, $token);
         $data    = array_keys($this->getSpecificResponse($request));
@@ -81,17 +84,18 @@ class QQ extends AbstractProvider {
 		return $data;
 	}
 
-	/**
-	 * get accesstoken
-	 *
-	 * The Content-type of server's returning is 'text/html;charset=utf-8'
-	 * so it has to be rewritten
-	 *
-	 * @param mixed $grant
-	 * @param array $options
-	 * @return AccessToken
-	 */
-	public function getAccessToken ($grant, array $options = []) {
+    /**
+     * get accesstoken
+     *
+     * The Content-type of server's returning is 'text/html;charset=utf-8'
+     * so it has to be rewritten
+     *
+     * @param mixed $grant
+     * @param array $options
+     * @return \League\OAuth2\Client\Token\AccessTokenInterface
+     * @throws IdentityProviderException
+     */
+	public function getAccessToken($grant, array $options = []) {
 		$grant = $this->verifyGrant($grant);
 
 		$params = [
@@ -114,7 +118,7 @@ class QQ extends AbstractProvider {
 	 * @return mixed
 	 * @throws IdentityProviderException
 	 */
-	protected function getSpecificResponse (RequestInterface $request) {
+	protected function getSpecificResponse(RequestInterface $request) {
         $response = $this->getResponse($request);
 		$parsed   = $this->parseSpecificResponse($response);
 
@@ -128,7 +132,7 @@ class QQ extends AbstractProvider {
 	 * @param ResponseInterface $response
 	 * @return mixed
 	 */
-	protected function parseSpecificResponse (ResponseInterface $response) {
+	protected function parseSpecificResponse(ResponseInterface $response) {
         $content = (string)$response->getBody();
         parse_str($content, $parsed);
 
@@ -140,10 +144,10 @@ class QQ extends AbstractProvider {
 	 *
 	 * @throws IdentityProviderException
 	 * @param  ResponseInterface $response
-	 * @param  string $data Parsed response data
+	 * @param  array $data Parsed response data
 	 * @return void
 	 */
-	protected function checkResponse (ResponseInterface $response, $data) {
+	protected function checkResponse(ResponseInterface $response, $data) {
 		if (isset($data['error'])) {
 			throw new IdentityProviderException($data['error_description'], $response->getStatusCode(), $response);
 		}
@@ -157,7 +161,7 @@ class QQ extends AbstractProvider {
 	 *
 	 * @return array
 	 */
-	protected function getDefaultScopes () {
+	protected function getDefaultScopes() {
 		return [];
 	}
 
@@ -167,7 +171,7 @@ class QQ extends AbstractProvider {
 	 * @param AccessToken $token
 	 * @return qqResourceOwner
 	 */
-	protected function createResourceOwner (array $response, AccessToken $token) {
+	protected function createResourceOwner(array $response, AccessToken $token) {
 		return new QQResourceOwner($response);
 	}
 }
