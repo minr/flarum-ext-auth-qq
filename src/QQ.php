@@ -4,6 +4,7 @@ namespace Minr\Auth\QQ;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
+use League\OAuth2\Client\Token\AccessTokenInterface;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -71,12 +72,12 @@ class QQ extends AbstractProvider {
      * @return mixed
      * @throws IdentityProviderException
      */
-	protected function fetchOpenid(AccessToken $token) {
+	protected function fetchOpenid(AccessTokenInterface $token) {
 		$url     = $this->getOpenidUrl($token);
 		$request = $this->getAuthenticatedRequest(self::METHOD_GET, $url, $token);
         $data    = array_keys($this->getSpecificResponse($request));
         $parsed  = $data[0];
-        if (strpos($parsed, "callback") !== FALSE) {
+        if (strpos($parsed, "callback") !== false) {
             preg_match('/{(.*)}/', $parsed, $data);
             $data = $data[0];
         }
@@ -92,25 +93,31 @@ class QQ extends AbstractProvider {
      *
      * @param mixed $grant
      * @param array $options
-     * @return \League\OAuth2\Client\Token\AccessTokenInterface
+     * @return AccessTokenInterface
      * @throws IdentityProviderException
      */
 	public function getAccessToken($grant, array $options = []) {
-		$grant = $this->verifyGrant($grant);
+        $grant = $this->verifyGrant($grant);
 
-		$params = [
-			'client_id'     => $this->clientId,
-			'client_secret' => $this->clientSecret,
-			'redirect_uri'  => $this->redirectUri,
-		];
+        $params = [
+            'client_id'     => $this->clientId,
+            'client_secret' => $this->clientSecret,
+            'redirect_uri'  => $this->redirectUri,
+        ];
 
-		$params   = $grant->prepareRequestParameters($params, $options);
-		$request  = $this->getAccessTokenRequest($params);
-		$response = $this->getSpecificResponse($request);
-		$prepared = $this->prepareAccessTokenResponse($response);
-		$token    = $this->createAccessToken($prepared, $grant);
-
-		return $token;
+        $params   = $grant->prepareRequestParameters($params, $options);
+        $request  = $this->getAccessTokenRequest($params);
+        $response = $this->getParsedResponse($request);
+        $_response = json_decode($response, true);
+        if(is_null($_response)){
+            print_r($response);
+            throw new \UnexpectedValueException(
+                'Invalid response received from Authorization Server. Expected JSON.'
+            );
+        }
+        $prepared = $this->prepareAccessTokenResponse($_response);
+        $token    = $this->createAccessToken($prepared, $grant);
+        return $token;
 	}
 
 	/**
@@ -144,11 +151,17 @@ class QQ extends AbstractProvider {
 	 *
 	 * @throws IdentityProviderException
 	 * @param  ResponseInterface $response
-	 * @param  array $data Parsed response data
+	 * @param  void $data Parsed response data
 	 * @return void
 	 */
 	protected function checkResponse(ResponseInterface $response, $data) {
-		if (isset($data['error'])) {
+	    /// 可能我需要进行额外特殊的校验
+        $data   = str_replace([
+            "callback(",
+            ");"
+        ], "", $data);
+        $data   = json_decode($data, true);
+		if(isset($data['error'])) {
 			throw new IdentityProviderException($data['error_description'], $response->getStatusCode(), $response);
 		}
 	}

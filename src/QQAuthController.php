@@ -51,15 +51,38 @@ class QQAuthController implements RequestHandlerInterface{
     /**
      * @param Request $request
      * @return ResponseInterface
+     * @throws Exception
      */
     public function handle(Request $request): ResponseInterface {
         $redirectUri = $this->url->to('forum')->route('auth.qq');
 
-        $provider = new QQ([
+        $provider   = new QQ([
             'clientId'          => $this->settings->get('minr-auth-qq.client_id'),
             'clientSecret'      => $this->settings->get('minr-auth-qq.client_secret'),
             'redirectUri'       => $redirectUri,
             'graphApiVersion'   => 'v3.0',
         ]);
-	}
+
+        $session        = $request->getAttribute('session');
+        $queryParams    = $request->getQueryParams();
+        $code           = array_get($queryParams, 'code');
+
+        if (!$code) {
+            $authUrl    = $provider->getAuthorizationUrl();
+            $session->put('oauth2state', $provider->getState());
+            return new RedirectResponse($authUrl);
+        }
+
+        $state          = array_get($queryParams, 'state');
+        if (!$state || $state !== $session->get('oauth2state')) {
+            $session->remove('oauth2state');
+            throw new Exception('Invalid state');
+        }
+
+        $token          = $provider->getAccessToken('authorization_code', [
+            "code"  => $code,
+        ]);
+        $user           = $provider->getResourceOwnerDetailsUrl($token);
+        var_dump($user);
+    }
 }
